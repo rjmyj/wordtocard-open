@@ -1,0 +1,37 @@
+{
+  "name": "wordtocard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tiptap/starter-kit": "^2.11.0",
+    "@tiptap/vue-3": "^2.11.0",
+    "@umoteam/editor": "^6.1.1",
+    "ant-design-vue": "^4.2.6",
+    "element-plus": "^2.9.7",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "jsdom": "^25.0.1",
+    "jszip": "^3.10.1",
+    "less": "^4.3.0",
+    "sass": "^1.86.0",
+    "unplugin-auto-import": "^19.1.2",
+    "unplugin-vue-components": "^28.5.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1",
+    "vue3-audio-player": "^1.0.7",
+    "vue3-seamless-scroll": "^3.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.2",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.3.1",
+    "vue-tsc": "^2.2.8"
+  }
+}

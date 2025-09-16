@@ -1,0 +1,254 @@
+<template>
+  <!-- From Uiverse.io by kennyotsu -->
+  <div>
+    <a-spin :spinning="isLoading">
+      <div>
+        <a-button type="primary" @click="exportToZip" style="margin: 1px">打包下载</a-button>
+        <div style="height: 30px"></div>
+        <div v-for="(item,index) in htmlConList">
+          <div class="container" :id="index+'img'">
+            <div class="card" :style="{  backgroundImage: 'url(' + coolbackgrounds + ')' }">
+              <div class="card__content">
+                <span v-html="item"></span>
+              </div>
+            </div>
+            <div style="clear: both"></div>
+          </div>
+          <a-button type="primary" @click="convertAndDownloadById(index+'img')" style="float: right;margin: 5px">下载图片</a-button>
+          <div style="clear: both"></div>
+          <div style="height: 10px"></div>
+        </div>
+      </div>
+    </a-spin>
+
+  </div>
+
+</template>
+<script setup lang="ts">
+import {onMounted, ref} from "vue";
+import html2canvas from 'html2canvas';
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver';
+const emit = defineEmits([  "getPromptBaseData"])
+import {message} from "ant-design-vue";
+const isLoading = ref(false)
+const imgIdList = ref<string[]>([]);
+const htmlConList = ref([])
+const props = defineProps({
+  cardWidth:{
+    type: String,
+    default: '450px'
+  },
+  cardHeight:{
+    type: String,
+    default: '0px'
+  },
+  htmlList: {
+    default: []
+  }
+})
+const card__content_css = ref("card__content")
+const lineCardWidth = ref("450px");
+const lineCardHeight = ref("0px");
+
+onMounted(()=>{
+  htmlConList.value = props.htmlList
+  lineCardWidth.value = props.cardWidth
+  for (let i = 0; i < htmlConList.value.length; i++) {
+    imgIdList.value.push(i+'img')
+  }
+  console.log(htmlConList.value)
+})
+
+const convertAndDownload = async (elementId) => {
+  isLoading.value = true
+  try{
+    const element = document.getElementById(elementId)
+    if (!element) return
+// 确保目标元素背景为透明
+    element.style.backgroundColor = 'transparent';
+    // 使用 html2canvas 将 DOM 元素转为 canvas，设置背景为透明
+    const canvas = await html2canvas(element, {
+      backgroundColor: null,
+      scale: 4,              // 禁用自动缩放，保持与 DOM 实际尺寸一致
+      useCORS: true,         // 处理跨域图片
+      logging: false,        // 关闭调试日志
+      allowTaint: true,      // 允许跨域图片
+      windowWidth: element.offsetWidth, // 设置 canvas 宽度为元素实际宽度
+      windowHeight: element.offsetHeight // 设置 canvas 高度为元素实际高度
+    });
+    // 将 canvas 转为 base64 图片数据
+    // 3. 将 canvas 转为 Blob 并下载（兼容移动端）
+    canvas.toBlob(blob => {
+      if (blob) {
+        saveAs(blob, `${elementId}.png`);
+      }
+    }, 'image/png');
+  }catch (e) {
+    console.log(e)
+  }
+  isLoading.value = false
+}
+const convertAndDownloadById = (id) => {
+  if(htmlConList.value.length <= 0){
+    message.error('内容不能为空！')
+    return
+  }
+  convertAndDownload(id)
+}
+// 生成图片 Blob 的函数
+const generateImageBlob = async (elementId) => {
+  try{
+    const element = document.getElementById(elementId)
+    if (!element) return null
+    // 设置透明背景
+    element.style.backgroundColor = 'transparent'
+    try {
+      const canvas = await html2canvas(element, {
+        backgroundColor: null,
+        scale: 4,              // 禁用自动缩放，保持与 DOM 实际尺寸一致
+        useCORS: true,         // 处理跨域图片
+        logging: false,        // 关闭调试日志
+        allowTaint: true,      // 允许跨域图片
+        windowWidth: element.offsetWidth, // 设置 canvas 宽度为元素实际宽度
+        windowHeight: element.offsetHeight // 设置 canvas 高度为元素实际高度
+      })
+      return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob)
+        }, 'image/png')
+      })
+    } catch (error) {
+      console.error(`生成 ${elementId} 图片时出错:`, error)
+      return null
+    }
+  }catch (e) {
+    console.log(e)
+  }
+  return null
+}
+
+// 导出 ZIP 文件（不依赖 file-saver）
+const exportToZip = async () => {
+  if(htmlConList.value.length <= 0){
+    message.error('内容不能为空！')
+    return
+  }
+  isLoading.value = true
+  try {
+    const zip = new JSZip()
+    // 逐个处理图片
+    for (const id of imgIdList.value) {
+      const blob = await generateImageBlob(id)
+      if (blob) {
+        zip.file(`${id}.png`, blob)
+      }
+    }
+    // 生成 ZIP 并下载
+    const content = await zip.generateAsync({ type: 'blob' })
+    // 使用原生方式下载 ZIP
+    const url = URL.createObjectURL(content)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'images.zip'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url) // 释放 URL
+  } catch (error) {
+    console.error('导出 ZIP 时出错:', error)
+    alert('导出失败，请重试！')
+  } finally {
+    isLoading.value = false
+  }
+  isLoading.value = false
+}
+
+// 导出 ZIP 文件（不依赖 file-saver）
+const exportToBaseUrl = async () => {
+  if(htmlConList.value.length <= 0){
+    message.error('内容不能为空！')
+    return
+  }
+  isLoading.value = true
+  try {
+    // 逐个处理图片
+    for (const id of imgIdList.value) {
+      const element = document.getElementById(id)
+      if (!element) return
+      element.style.backgroundColor = 'transparent';
+      const canvas = await html2canvas(element, {
+        backgroundColor: null // 启用透明背景
+      });
+      // 将 canvas 转为 base64 图片数据
+      const urlBase64 = canvas.toDataURL('image/png')
+      //  saveFileBase
+      emit("getPromptBaseData",
+          {
+            "baseData":urlBase64
+          }
+      )
+    }
+  } catch (error) {
+    console.error('导出 ZIP 时出错:', error)
+  } finally {
+    isLoading.value = false
+  }
+  isLoading.value = false
+}
+
+
+async function getBaseUrl(elementId) {
+  if(htmlConList.value.length <= 0){
+    message.error('内容不能为空！')
+    return
+  }
+  isLoading.value = true
+  try{
+    const element = document.getElementById(elementId)
+    if (!element) return
+    element.style.backgroundColor = 'transparent';
+    const canvas = await html2canvas(element, {
+      backgroundColor: null // 启用透明背景
+    });
+    // 将 canvas 转为 base64 图片数据
+    const urlBase64 = canvas.toDataURL('image/png')
+    //  saveFileBase
+    emit("getPromptBaseData",
+        {
+          "baseData":urlBase64
+        }
+    )
+  }catch (e) {
+    console.log(e)
+  }
+  isLoading.value = false
+}
+
+</script>
+<style scoped >
+.container {
+  width: v-bind('lineCardWidth');
+  margin: auto;
+}
+.card {
+  border-radius: 20px;
+  padding:15px;
+  width:100%;
+  height:100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card__content {
+  background-color: rgba(11, 37, 82, 0.44);
+  margin-top: 15px;
+  padding: 20px;
+  border-radius:20px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: rgba(2, 198, 255, 0.7);
+  color: #ffffff;
+}
+</style>
