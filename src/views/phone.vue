@@ -648,50 +648,33 @@ const createOffscreenDiv = () => {
   document.body.appendChild(div)
   return div
 }
-// 分割内容逻辑
-const splitContentToPages = (originalContent,containerHeight) => {
-  const offscreen = createOffscreenDiv()
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(originalContent, 'text/html')
-  const nodes = Array.from(doc.body.childNodes)
-  const pageContents = []
-  let currentPageHTML = ''
+const splitContentToPages = (html, maxHeight) => {
+  const dummy = Object.assign(document.createElement('div'), {
+    style: `position:absolute;visibility:hidden;width:${document.body.offsetWidth}px;line-height:32px;`
+  });
+  document.body.appendChild(dummy);
 
-  const flushPage = () => {
-    pageContents.push(currentPageHTML)
-    currentPageHTML = ''
-  }
+  const frag = new DOMParser().parseFromString(html, 'text/html').body;
+  const pages = [''];
 
-  for (let node of nodes) {
-    const tempNode = node.cloneNode(true)
-    const tempWrapper = document.createElement('div')
-    tempWrapper.appendChild(tempNode)
-    const htmlToAdd = tempWrapper.innerHTML
-    const combinedHTML = currentPageHTML + htmlToAdd
+  for (let node of frag.childNodes) {
+    const tempHTML = (pages.at(-1) + node.outerHTML).trim();
+    dummy.innerHTML = tempHTML;
 
-    offscreen.innerHTML = combinedHTML
-    if (offscreen.scrollHeight > containerHeight) {
-      // 当前内容放不下，先保存当前页
-      flushPage()
-      // 再尝试单独添加这个节点
-      offscreen.innerHTML = htmlToAdd
-      if (offscreen.scrollHeight > containerHeight) {
-        console.warn('单个元素太高，无法放入一页')
-      }
-      currentPageHTML = htmlToAdd
+    if (dummy.scrollHeight > maxHeight) {
+      // 放不下就新开一页
+      pages.push(node.outerHTML);
     } else {
-      currentPageHTML = combinedHTML
+      // 能放下就追加
+      pages[pages.length - 1] = tempHTML;
     }
   }
 
-  if (currentPageHTML) flushPage()
+  // 清理
+  document.body.removeChild(dummy);
 
-  // 清理 offscreen 元素
-  document.body.removeChild(offscreen)
-
-  return pageContents;
-}
-
+  return pages.filter(Boolean); // 过滤空页
+};
 defineExpose({
   getArticleContent,
   setArticleContent
