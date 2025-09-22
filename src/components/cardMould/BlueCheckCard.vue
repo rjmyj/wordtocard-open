@@ -1,6 +1,7 @@
 <template>
   <!-- From Uiverse.io by kennyotsu -->
   <div>
+    <a href="https://www.wordtocard.com/">wordtocard<a/>
     <a-spin :spinning="isLoading">
       <div>
         <a-button type="primary" @click="exportToZip" style="margin: 1px">打包下载</a-button>
