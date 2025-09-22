@@ -41,7 +41,7 @@ WordToCard 是一个基于 Word 的内容转化工具，支持将文档内容自
 
 wordtocard-open 是一个持续成长的开源项目，欢迎你一起参与开发、优化模板、撰写文档或提出宝贵建议。
 
-官网：https://wordtocard.com/
+官网：https://www.wordtocard.com/
 项目愿景：让每个人都能轻松地将知识变得更有条理、更具美感。
 
 > **WordToCard-Open —— 图文转知识卡片，让知识表达更优雅。**
