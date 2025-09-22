@@ -8,6 +8,7 @@
               <img :src="logo" style="height: 40px;width: 40px;margin-top: 5px">
             </div>
             <div style="float: left;padding-top: 12px;padding-left: 10px">
+              <a href="https://www.wordtocard.com/">wordtocard<a/>
               <span  style="font-size: 20px;font-weight: bold;color: #3F84EB;">WordToCard</span>
             </div>
           </div>
