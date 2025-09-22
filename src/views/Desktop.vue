@@ -19,6 +19,7 @@
               </a>
             </a-col>
             <a-col :span="6">
+              <a href="https://www.wordtocard.com/">wordtocard<a/>
               <span  style="line-height: 50px;font-size: 16px;font-weight: bold;color: #3F84EB;text-align: left;margin-left: 10px">WordToCard</span>
             </a-col>
             <a-col :span="10" style="margin-top: 10px">
