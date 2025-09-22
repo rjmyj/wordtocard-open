@@ -34,6 +34,9 @@ WordToCard 是一个基于 Word 的内容转化工具，支持将文档内容自
 
 本项目采用前后端分离架构，前端支持 Web 或桌面应用，后端解析 Word 文件并进行样式映射。模板系统可扩展，便于社区共建共享。
 
+开源版本基于：Umo Editor
+https://github.com/umodoc/editor
+
 ---
 
 
