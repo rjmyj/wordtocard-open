@@ -638,16 +638,6 @@ function ReSplitHtml() {
   },1000)
 }
 
-// 创建一个隐藏的 div 用于测量内容高度
-const createOffscreenDiv = () => {
-  const div = document.createElement('div')
-  div.style.position = 'absolute'
-  div.style.visibility = 'hidden'
-  div.style.width = cardWidth.value
-  div.style.lineHeight = '32px'
-  document.body.appendChild(div)
-  return div
-}
 const splitContentToPages = (html, maxHeight) => {
   const dummy = Object.assign(document.createElement('div'), {
     style: `position:absolute;visibility:hidden;width:${document.body.offsetWidth}px;line-height:32px;`
