@@ -86,23 +86,7 @@ const optionsSelectMore = ref([
   { value: '冰晶晨曦', label: '冰晶晨曦' },
   { value: '紫色元界', label: '紫色元界' },
   { value: '紫梦暖阳', label: '紫梦暖阳' },
-  { value: '霓虹彩灯', label: '霓虹彩灯' },
-  { value: '霓虹边界', label: '霓虹边界' },
-  { value: '蓝色书本', label: '蓝色书本' },
-  { value: '绿色便签', label: '绿色便签' },
-  { value: '窗口卡片', label: '窗口卡片' },
-  { value: '抽屉卡片', label: '抽屉卡片'},
-  { value: '苹果视窗', label: '苹果视窗' },
-  { value: '发票卡片', label: '发票卡片' },
-  { value: '炫酷黑暗', label: '炫酷黑暗' },
-  { value: '知识白色', label: '知识白色'},
-  { value: '暗黑红色', label: '暗黑红色' },
-  { value: '青色卡片', label: '青色卡片'},
-  { value: '蓝色三角化', label: '蓝色三角化'},
-  { value: '黄色三角化', label: '黄色三角化' },
-  { value: '赛博朋克', label: '赛博朋克' },
-  { value: '蓝色格子', label: '蓝色格子' },
-  { value: '尊贵卡片', label: '尊贵卡片' },
+
 ]);
 onMounted(() => {
   valueCard.value = sessionStorage.getItem('valueSearch');

@@ -1,21 +1,11 @@
 <template>
   <div>
-    <div style="clear: both"></div>
-    <div v-if="DeviceTypeValue == 'Desktop'">
-      <Desktop></Desktop>
-    </div>
-    <div v-if="DeviceTypeValue == 'phone'">
-      <phone></phone>
-    </div>
+    <Desktop></Desktop>
   </div>
 </template>
 <script setup lang="ts">
 import {ref, h,onMounted} from "vue";
-import { LeftOutlined } from '@ant-design/icons-vue';
-import logo from "@/assets/logo.png";
 import Desktop from "@/views/Desktop.vue";
-import phone from "@/views/phone.vue";
-
 const DeviceTypeValue = ref<string | undefined>("Desktop");
 onMounted(() => {
  let DeviceType = detectDeviceType();

@@ -8,6 +8,7 @@
               <img :src="logo" style="height: 40px;width: 40px;margin-top: 5px">
             </div>
             <div style="float: left;padding-top: 12px;padding-left: 10px">
+
               <span  style="font-size: 20px;font-weight: bold;color: #3F84EB;">WordToCard</span>
             </div>
           </div>
@@ -23,7 +24,7 @@
     <div>
       <div class="bgcard"  :style="{  backgroundImage: 'url(' + bjhome + ')' }">
         <div style="height: 15vh"></div>
-        <div style="text-align: center;font-size: 60px;font-weight: bold;color: #000000;">WordToCard</div>
+        <div style="text-align: center;font-size: 60px;font-weight: bold;color: #000000;"></div>
         <div style="text-align: center;font-size: 50px;font-weight: bold;margin-top: 10px;">
           <span style="color: deeppink">文章</span>
           <span style="color: #000000">&nbsp;转&nbsp;</span>

@@ -3,7 +3,6 @@
   <div>
     <a-spin :spinning="isLoading">
       <div>
-        <a-button type="primary" @click="exportToZip" style="margin: 1px">打包下载</a-button>
         <div style="height: 30px"></div>
         <div v-for="(item,index) in htmlConList">
           <div class="container noselect" :id="index+'img'">
@@ -134,101 +133,13 @@ const generateImageBlob = async (elementId) => {
 }
 
 // 导出 ZIP 文件（不依赖 file-saver）
-const exportToZip = async () => {
-  if(htmlConList.value.length <= 0){
-    message.error('内容不能为空！')
-    return
-  }
-  isLoading.value = true
-  try {
-    const zip = new JSZip()
-    // 逐个处理图片
-    for (const id of imgIdList.value) {
-      const blob = await generateImageBlob(id)
-      if (blob) {
-        zip.file(`${id}.png`, blob)
-      }
-    }
-    // 生成 ZIP 并下载
-    const content = await zip.generateAsync({ type: 'blob' })
-    // 使用原生方式下载 ZIP
-    const url = URL.createObjectURL(content)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'images.zip'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url) // 释放 URL
-  } catch (error) {
-    console.error('导出 ZIP 时出错:', error)
-    alert('导出失败，请重试！')
-  } finally {
-    isLoading.value = false
-  }
-  isLoading.value = false
-}
+
 
 // 导出 ZIP 文件（不依赖 file-saver）
-const exportToBaseUrl = async () => {
-  if(htmlConList.value.length <= 0){
-    message.error('内容不能为空！')
-    return
-  }
-  isLoading.value = true
-  try {
-    // 逐个处理图片
-    for (const id of imgIdList.value) {
-      const element = document.getElementById(id)
-      if (!element) return
-      element.style.backgroundColor = 'transparent';
-      const canvas = await html2canvas(element, {
-        backgroundColor: null // 启用透明背景
-      });
-      // 将 canvas 转为 base64 图片数据
-      const urlBase64 = canvas.toDataURL('image/png')
-      //  saveFileBase
-      emit("getPromptBaseData",
-          {
-            "baseData":urlBase64
-          }
-      )
-    }
-  } catch (error) {
-    console.error('导出 ZIP 时出错:', error)
-  } finally {
-    isLoading.value = false
-  }
-  isLoading.value = false
-}
 
 
-async function getBaseUrl(elementId) {
-  if(htmlConList.value.length <= 0){
-    message.error('内容不能为空！')
-    return
-  }
-  isLoading.value = true
-  try{
-    const element = document.getElementById(elementId)
-    if (!element) return
-    element.style.backgroundColor = 'transparent';
-    const canvas = await html2canvas(element, {
-      backgroundColor: null // 启用透明背景
-    });
-    // 将 canvas 转为 base64 图片数据
-    const urlBase64 = canvas.toDataURL('image/png')
-    //  saveFileBase
-    emit("getPromptBaseData",
-        {
-          "baseData":urlBase64
-        }
-    )
-  }catch (e) {
-    console.log(e)
-  }
-  isLoading.value = false
-}
+
+
 
 </script>
 <style scoped >
