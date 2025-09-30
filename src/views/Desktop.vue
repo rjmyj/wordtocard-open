@@ -314,33 +314,7 @@ watch(valueChaiFen, (newVal, oldVal) => {
     ReSplitHtml()
   }
 })
-const splitContentToPages = (html, maxHeight) => {
-  const dummy = Object.assign(document.createElement('div'), {
-    style: `position:absolute;visibility:hidden;width:${document.body.offsetWidth}px;line-height:32px;`
-  });
-  document.body.appendChild(dummy);
 
-  const frag = new DOMParser().parseFromString(html, 'text/html').body;
-  const pages = [''];
-
-  for (let node of frag.childNodes) {
-    const tempHTML = (pages.at(-1) + node.outerHTML).trim();
-    dummy.innerHTML = tempHTML;
-
-    if (dummy.scrollHeight > maxHeight) {
-      // 放不下就新开一页
-      pages.push(node.outerHTML);
-    } else {
-      // 能放下就追加
-      pages[pages.length - 1] = tempHTML;
-    }
-  }
-
-  // 清理
-  document.body.removeChild(dummy);
-
-  return pages.filter(Boolean); // 过滤空页
-};
 
 defineExpose({
   getArticleContent,
